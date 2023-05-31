@@ -64,6 +64,7 @@ pipeline {
       }
     }
   }
+}
 
   post('Report') {
     fixed {
