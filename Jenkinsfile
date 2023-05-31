@@ -53,6 +53,7 @@ pipeline {
         sh 'helm install pmm -f values.yaml percona/pmm -n kube-system'
       }
     }
+  }
 
     stage('Deploy ingress to target') {
       when {
@@ -63,6 +64,7 @@ pipeline {
       }
     }
   }
+
   post('Report') {
     fixed {
       script {
