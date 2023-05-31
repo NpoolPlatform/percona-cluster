@@ -1,1 +1,1 @@
-# percona-cluster
+# percona-mysql-cluster
