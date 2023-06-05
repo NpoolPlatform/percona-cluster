@@ -49,7 +49,7 @@ pipeline {
       }
       steps {
         sh 'helm repo add percona https://percona.github.io/percona-helm-charts'
-        sh 'helm upgrade pmm -f values.yaml percona/pmm -n kube-system || helm install pmm -f values.yaml percona/pmm -n kube-system'
+        sh 'helm upgrade pmm -f values.yaml ./pmm -n kube-system || helm install pmm -f values.yaml ./pmm -n kube-system'
       }
     }
 
