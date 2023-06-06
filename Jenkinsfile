@@ -39,7 +39,6 @@ pipeline {
         expression { DEPLOY_TARGET == 'true' }
       }
       steps {
-        sh 'mkdir -p .docker-tmp; cp /usr/bin/consul .docker-tmp'
         sh 'kubectl apply -f secret.yaml'
       }
     }
@@ -59,6 +58,7 @@ pipeline {
         expression { DEPLOY_TARGET == 'true' }
       }
       steps {
+        sh 'kubectl cp /usr/bin/consul kube-system/`kubectl get pod -A | grep pmm | awk '{print $2}'`:/usr/bin'
         sh 'kubectl apply -f traefik-vpn-ingress.yaml'
       }
     }
