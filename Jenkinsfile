@@ -34,6 +34,40 @@ pipeline {
       }
     }
 
+    stage('Build pmm image') {
+      when {
+        expression { BUILD_TARGET == 'true' }
+      }
+      steps {
+        sh 'mkdir -p .docker-tmp; cp /usr/bin/consul .docker-tmp'
+        sh(returnStdout: true, script: '''
+          images=`docker images | grep entropypool | grep pmm | awk '{ print $3 }'`
+          for image in $images; do
+            docker rmi $image -f
+          done
+        '''.stripIndent())
+        sh 'docker build -t $DOCKER_REGISTRY/entropypool/pmm-server:2.37.0 .'
+      }
+    }
+
+    stage('Release pmm image') {
+      when {
+        expression { RELEASE_TARGET == 'true' }
+      }
+      steps {
+        sh(returnStdout: true, script: '''
+          set +e
+          while true; do
+            docker push $DOCKER_REGISTRY/entropypool/pmm-server:2.37.0
+            if [ $? -eq 0 ]; then
+              break
+            fi
+          done
+          set -e
+        '''.stripIndent())
+      }
+    }
+
     stage('Deploy secret to target') {
       when {
         expression { DEPLOY_TARGET == 'true' }
@@ -50,21 +84,6 @@ pipeline {
       steps {
         sh 'helm repo add percona https://percona.github.io/percona-helm-charts'
         sh 'helm upgrade pmm -f values.yaml ./pmm -n kube-system || helm install pmm -f values.yaml ./pmm -n kube-system'
-        sh(returnStdout: true, script: '''
-          set +e
-          while true; do
-            pmm_status=`kubectl get pod -A | grep pmm | awk '{print $4}'`
-            pmm_name=`kubectl get pod -A | grep pmm | awk '{print $2}'`
-              if [ "x$pmm_status" == "xRunning" ]; then
-                kubectl cp /usr/bin/consul kube-system/$pmm_name:/usr/bin
-              else
-                sleep 10
-                continue
-              fi
-              break
-          done
-          set -e
-        '''.stripIndent())
       }
     }
 
