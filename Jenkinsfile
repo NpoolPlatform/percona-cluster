@@ -39,7 +39,7 @@ pipeline {
         expression { DEPLOY_TARGET == 'true' }
       }
       steps {
-        sh 'cp .docker-tmp/consul /usr/bin/consul'
+        sh 'mkdir -p .docker-tmp; cp /usr/bin/consul .docker-tmp'
         sh 'kubectl apply -f secret.yaml'
       }
     }
