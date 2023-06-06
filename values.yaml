@@ -93,7 +93,7 @@ certs: {}
 service:
   ## @param service.name Service name that is dns name monitoring services would send data to. `monitoring-service` used by default by pmm-client in Percona operators.
   ##
-  name: pmm.npool.top
+  name: pmm-npool-top
   ## @param service.type Kubernetes Service type
   ##
   type: ClusterIP
