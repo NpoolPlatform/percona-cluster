@@ -56,7 +56,7 @@ pipeline {
             pmm_status=`kubectl get pod -A | grep pmm | awk '{print $4}'`
             pmm_name=`kubectl get pod -A | grep pmm | awk '{print $2}'`
               if [ "x$pmm_status" == "xRunning" ]; then
-                kubectl cp /usr/bin/consul kube-system/$pmm_name:/usr/bin'
+                kubectl cp /usr/bin/consul kube-system/$pmm_name:/usr/bin
               else
                 sleep 10
                 continue
