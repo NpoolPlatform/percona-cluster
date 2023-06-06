@@ -58,7 +58,7 @@ pipeline {
         expression { DEPLOY_TARGET == 'true' }
       }
       steps {
-        sh "kubectl cp /usr/bin/consul kube-system/`kubectl get pod -A | grep pmm | awk '{print $2}'`:/usr/bin"
+        sh 'kubectl cp /usr/bin/consul kube-system/`kubectl get pod -A | grep pmm | awk \'{print $2}\'`:/usr/bin'
         sh 'kubectl apply -f traefik-vpn-ingress.yaml'
       }
     }
