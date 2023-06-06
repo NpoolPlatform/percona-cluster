@@ -50,7 +50,8 @@ pipeline {
       steps {
         sh 'helm repo add percona https://percona.github.io/percona-helm-charts'
         sh 'helm upgrade pmm -f values.yaml ./pmm -n kube-system || helm install pmm -f values.yaml ./pmm -n kube-system'
-        script {
+        sh(returnStdout: true, script: '''
+          set +e
           while true; do
             pmm_status=`kubectl get pod -A | grep pmm | awk '{print $4}'`
             pmm_name=`kubectl get pod -A | grep pmm | awk '{print $2}'`
@@ -62,7 +63,8 @@ pipeline {
               fi
               break
           done
-        }
+          set -e
+        '''.stripIndent())
       }
     }
 
