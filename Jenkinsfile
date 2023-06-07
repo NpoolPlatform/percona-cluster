@@ -28,12 +28,6 @@ pipeline {
       }
     }
 
-    stage('Switch to current cluster') {
-      steps {
-        sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
-      }
-    }
-
     stage('Build pmm image') {
       when {
         expression { BUILD_TARGET == 'true' }
@@ -47,6 +41,12 @@ pipeline {
           done
         '''.stripIndent())
         sh 'docker build -t $DOCKER_REGISTRY/entropypool/pmm-server:2.37.0 .'
+      }
+    }
+
+    stage('Switch to current cluster') {
+      steps {
+        sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
       }
     }
 
