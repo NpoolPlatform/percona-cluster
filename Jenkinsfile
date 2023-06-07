@@ -28,6 +28,12 @@ pipeline {
       }
     }
 
+    stage('Switch to current cluster') {
+      steps {
+        sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
+      }
+    }
+
     stage('Build pmm image') {
       when {
         expression { BUILD_TARGET == 'true' }
@@ -62,13 +68,7 @@ pipeline {
       }
     }
 
-    stage('Switch to current cluster') {
-      steps {
-        sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
-      }
-    }
-
-    stage('Deploy percona mysql cluster') {
+    stage('Deploy secret to target') {
       when {
         expression { DEPLOY_TARGET == 'true' }
       }
@@ -77,8 +77,24 @@ pipeline {
           export PMM_ADMIN_PASSWORD=$PMM_ADMIN_PASSWORD
           envsubst < secret.yaml | kubectl apply -f -
         '''.stripIndent())
+      }
+    }
+
+    stage('Deploy percona mysql cluster with helm') {
+      when {
+        expression { DEPLOY_TARGET == 'true' }
+      }
+      steps {
         sh 'helm repo add percona https://percona.github.io/percona-helm-charts'
         sh 'helm upgrade pmm -f values.yaml ./pmm -n kube-system || helm install pmm -f values.yaml ./pmm -n kube-system'
+      }
+    }
+
+    stage('Deploy ingress to target') {
+      when {
+        expression { DEPLOY_TARGET == 'true' }
+      }
+      steps {
         sh 'kubectl apply -f traefik-vpn-ingress.yaml'
       }
     }
