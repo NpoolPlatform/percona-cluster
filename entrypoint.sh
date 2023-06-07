@@ -2,9 +2,6 @@
 
 my_hostname=`hostname`
 my_ip=`hostname -i`
-ENV_CLUSTER_NAMESPACE=kube-system
-ENV_CONSUL_HOST=consul-server.${kube-system}.svc.cluster.local
-ENV_CONSUL_PORT=8500
 export CONSUL_HTTP_ADDR=${ENV_CONSUL_HOST}:${ENV_CONSUL_PORT}
 
 function register_service() {

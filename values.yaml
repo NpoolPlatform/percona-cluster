@@ -14,7 +14,7 @@ image:
   repository: uhub.service.ucloud.cn/entropypool/pmm-server
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "2.37.0.2"
+  tag: "2.37.0.3"
   imagePullSecrets: []
 
 ## PMM environment variables
