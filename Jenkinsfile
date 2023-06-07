@@ -28,6 +28,12 @@ pipeline {
       }
     }
 
+    stage('Switch to current cluster') {
+      steps {
+        sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
+      }
+    }
+
     stage('Build pmm image') {
       when {
         expression { BUILD_TARGET == 'true' }
@@ -59,12 +65,6 @@ pipeline {
           done
           set -e
         '''.stripIndent())
-      }
-    }
-
-    stage('Switch to current cluster') {
-      steps {
-        sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
       }
     }
 
