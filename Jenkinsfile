@@ -28,12 +28,6 @@ pipeline {
       }
     }
 
-    stage('Switch to current cluster') {
-      steps {
-        sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
-      }
-    }
-
     stage('Build pmm image') {
       when {
         expression { BUILD_TARGET == 'true' }
@@ -68,12 +62,21 @@ pipeline {
       }
     }
 
+    stage('Switch to current cluster') {
+      steps {
+        sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
+      }
+    }
+
     stage('Deploy secret to target') {
       when {
         expression { DEPLOY_TARGET == 'true' }
       }
       steps {
-        sh 'kubectl apply -f secret.yaml'
+        sh (returnStdout: true, script: '''
+          export PMM_ADMIN_PASSWORD=$PMM_ADMIN_PASSWORD
+          envsubst < secret.yaml | kubectl apply -f -
+        '''.stripIndent())
       }
     }
 
