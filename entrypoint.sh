@@ -7,6 +7,7 @@ export CONSUL_HTTP_ADDR=${ENV_CONSUL_HOST}:${ENV_CONSUL_PORT}
 
 function register_service() {
   while true; do
+    sleep 10
     my_id=pmm.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local
     my_name=pmm-npool-top
     consul services deregister -id=$my_id
