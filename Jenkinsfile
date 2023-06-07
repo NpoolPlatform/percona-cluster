@@ -82,6 +82,7 @@ pipeline {
         sh 'kubectl apply -f traefik-vpn-ingress.yaml'
       }
     }
+  }
 
   post('Report') {
     fixed {
