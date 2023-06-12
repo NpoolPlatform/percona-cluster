@@ -95,6 +95,7 @@ pipeline {
         expression { DEPLOY_TARGET == 'true' }
       }
       steps {
+        sh 'sed -i "s/development/$TARGET_ENV/g" traefik-vpn-ingress.yaml'
         sh 'kubectl apply -f traefik-vpn-ingress.yaml'
       }
     }
