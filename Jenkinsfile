@@ -75,7 +75,7 @@ pipeline {
       steps {
         sh (returnStdout: true, script: '''
           export PMM_ADMIN_PASSWORD=$PMM_ADMIN_PASSWORD
-          envsubst < secret.yaml | kubectl apply -f -
+          NODE_SELECTOR_LABEL_KEY=$NODE_SELECTOR_LABEL_KEY NODE_SELECTOR_LABEL_VALUE=$NODE_SELECTOR_LABEL_VALUE envsubst < secret.yaml | kubectl apply -f -
         '''.stripIndent())
       }
     }
@@ -86,7 +86,8 @@ pipeline {
       }
       steps {
         sh 'helm repo add percona https://percona.github.io/percona-helm-charts'
-        sh 'helm upgrade pmm -f values.yaml ./pmm -n kube-system || helm install pmm -f values.yaml ./pmm -n kube-system'
+        sh 'NODE_SELECTOR_LABEL_KEY=$NODE_SELECTOR_LABEL_KEY NODE_SELECTOR_LABEL_VALUE=$NODE_SELECTOR_LABEL_VALUE envsubst < values.yaml > .values.yaml'
+        sh 'helm upgrade pmm -f .values.yaml ./pmm -n kube-system || helm install pmm -f .values.yaml ./pmm -n kube-system'
       }
     }
 
