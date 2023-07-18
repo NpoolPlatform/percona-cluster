@@ -70,12 +70,12 @@ pipeline {
 
     stage('Deploy secret to target') {
       when {
-        expression { DEPLOY_TARGET == 'true' }
+        expression { CONFIG_SECRET == 'true' }
       }
       steps {
         sh (returnStdout: true, script: '''
           export PMM_ADMIN_PASSWORD=$PMM_ADMIN_PASSWORD
-          NODE_SELECTOR_LABEL_KEY=$NODE_SELECTOR_LABEL_KEY NODE_SELECTOR_LABEL_VALUE=$NODE_SELECTOR_LABEL_VALUE envsubst < secret.yaml | kubectl apply -f -
+          envsubst < secret.yaml | kubectl apply -f -
         '''.stripIndent())
       }
     }
