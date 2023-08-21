@@ -57,7 +57,7 @@ pipeline {
       steps {
         sh(returnStdout: true, script: '''
           set +e
-          docker images |grep pmm-server:2.39.0
+          docker images |grep pmm-server | grep 2.39.0
           rc=$?
           set -e
           [ 0 -eq $rc ] && docker push $DOCKER_REGISTRY/entropypool/pmm-server:2.39.0
