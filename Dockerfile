@@ -1,4 +1,4 @@
-FROM percona/pmm-server:2.37.0
+FROM percona/pmm-server:2.39.0
 
 RUN mkdir -p /usr/local/bin
 RUN mv /opt/entrypoint.sh  /opt/entrypoint-inner.sh

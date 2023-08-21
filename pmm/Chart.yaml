@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: 2.37.0
+appVersion: 2.39.0
 description: A Helm chart for Percona Monitoring and Management (PMM)
 home: https://github.com/percona/pmm
 icon: https://www.percona.com/sites/default/files/pmm-logo.png

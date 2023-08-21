@@ -46,7 +46,7 @@ pipeline {
             docker rmi $image -f
           done
         '''.stripIndent())
-        sh 'docker build -t $DOCKER_REGISTRY/entropypool/pmm-server:2.37.0.3 .'
+        sh 'docker build -t $DOCKER_REGISTRY/entropypool/pmm-server:2.39.0 .'
       }
     }
 
@@ -58,7 +58,7 @@ pipeline {
         sh(returnStdout: true, script: '''
           set +e
           while true; do
-            docker push $DOCKER_REGISTRY/entropypool/pmm-server:2.37.0.3
+            docker push $DOCKER_REGISTRY/entropypool/pmm-server:2.39.0
             if [ $? -eq 0 ]; then
               break
             fi
