@@ -57,13 +57,10 @@ pipeline {
       steps {
         sh(returnStdout: true, script: '''
           set +e
-          while true; do
-            docker push $DOCKER_REGISTRY/entropypool/pmm-server:2.39.0
-            if [ $? -eq 0 ]; then
-              break
-            fi
-          done
+          docker images |grep pmm-server:2.39.0
+          rc=$?
           set -e
+          [ 0 -eq $rc ] && docker push $DOCKER_REGISTRY/entropypool/pmm-server:2.39.0
         '''.stripIndent())
       }
     }
